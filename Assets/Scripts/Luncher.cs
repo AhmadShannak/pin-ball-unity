@@ -8,12 +8,8 @@ using UnityEngine.UI;
 
 namespace Pinball {
   public class Luncher : MonoBehaviourPunCallbacks {
-    [SerializeField]
-    Button playNowButton;
-
     private void Awake() {
       PhotonNetwork.AutomaticallySyncScene = true;
-      playNowButton.onClick.AddListener(Connect);
     }
 
     public void Connect() {
