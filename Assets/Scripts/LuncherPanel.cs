@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MEC;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,10 @@ namespace Pinball {
     Button playNowButton;
     [SerializeField]
     Luncher luncher;
+    [SerializeField]
+    GameObject connectPanel, inputPanel;
+    [SerializeField]
+    TextMeshProUGUI connectingText;
     
     const string PlayerNameKey = "PlayerNameKey";
 
@@ -29,7 +35,8 @@ namespace Pinball {
       });
       playNowButton.onClick.AddListener(() => {
         SetPlayerName(playerNameInput.text);
-        luncher.Connect();
+        PhotonNetwork.NickName = playerNameInput.text;
+        luncher.Connect(connectPanel, inputPanel, connectingText.gameObject);
       });
     }
     
