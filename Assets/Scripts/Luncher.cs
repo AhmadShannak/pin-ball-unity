@@ -56,6 +56,11 @@ namespace Pinball {
       Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room.");
       PhotonNetwork.LoadLevel("Game");
     }
+
+    public override void OnCreatedRoom() {
+      Timing.KillCoroutines(connectingCorTag);
+    }
+
 #endregion
     IEnumerator<float> BlinkConnectingText() {
       while (true) {
