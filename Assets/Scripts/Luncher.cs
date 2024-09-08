@@ -36,7 +36,7 @@ namespace Pinball {
 #region MonoBehaviourPunCallbacks Callbacks
     public override void OnConnectedToMaster() {
       Debug.Log("OnConnectedToMaster() was called by PUN");
-      // Show something that you connected to master and waiting for a room to join
+      PhotonNetwork.JoinRandomRoom();
     }
     
     public override void OnDisconnected(DisconnectCause cause) {
@@ -49,6 +49,12 @@ namespace Pinball {
     public override void OnJoinRandomFailed(short returnCode, string message) {
       Debug.Log("OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
       PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 2 });
+    }
+    
+    public override void OnJoinedRoom() {
+      Timing.KillCoroutines(connectingCorTag);
+      Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room.");
+      PhotonNetwork.LoadLevel("Game");
     }
 #endregion
     IEnumerator<float> BlinkConnectingText() {
