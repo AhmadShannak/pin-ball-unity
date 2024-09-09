@@ -1,8 +1,9 @@
 using DG.Tweening;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Pinball {
-  public class Player : MonoBehaviour {
+  public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     [SerializeField]
     Transform leftFlipper, rightFlipper;
     [SerializeField]
@@ -58,6 +59,15 @@ namespace Pinball {
       var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
       flipper.DORotateQuaternion(rotation, returnDuration);
+    }
+    
+    public void OnPhotonInstantiate(PhotonMessageInfo info) {
+      var player = info.photonView.gameObject;
+      bool isMine = player.GetPhotonView().IsMine;
+      Debug.Log(isMine);
+      var instantiatePosition = isMine ? new Vector3(0, -3, 0) : new Vector3(0, 3, 0);
+      Debug.Log(instantiatePosition);
+      player.transform.position = instantiatePosition;
     }
   }
 }

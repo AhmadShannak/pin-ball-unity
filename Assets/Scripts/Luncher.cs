@@ -25,7 +25,8 @@ namespace Pinball {
       connectingText = _connectingText;
       connectPanel.SetActive(true);
       inputPanel.SetActive(false);
-      Timing.RunCoroutine(BlinkConnectingText(), connectingCorTag);
+      Timing.RunCoroutine(BlinkConnectingText().CancelWith(this.gameObject), connectingCorTag);
+      
       if (PhotonNetwork.IsConnected) {
         PhotonNetwork.JoinRandomRoom();
       } else {
@@ -69,6 +70,10 @@ namespace Pinball {
         connectingText.gameObject.SetActive(false);
         yield return Timing.WaitForSeconds(0.5f);
       }
+    }
+    
+    void OnDisable() {
+      Timing.KillCoroutines(connectingCorTag);
     }
   }
 }
