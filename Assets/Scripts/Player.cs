@@ -58,16 +58,17 @@ namespace Pinball {
     void ReturnFlipper(Controller controller) {
       var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
+      var playerRotation = this.transform.localEulerAngles;
+      rotation = Quaternion.Euler(playerRotation) * rotation;
       flipper.DORotateQuaternion(rotation, returnDuration);
     }
     
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
       var player = info.photonView.gameObject;
       bool isMine = player.GetPhotonView().IsMine;
-      Debug.Log(isMine);
       var instantiatePosition = isMine ? new Vector3(0, -3, 0) : new Vector3(0, 3, 0);
-      Debug.Log(instantiatePosition);
       player.transform.position = instantiatePosition;
+      player.transform.localEulerAngles = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
     }
   }
 }
