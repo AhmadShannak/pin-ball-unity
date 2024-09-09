@@ -495,6 +495,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16298cd80c1b4a3e9cfb54de9a3ffda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftFlipper: {fileID: 394871602}
+  rightFlipper: {fileID: 969434254}
+  rotationAmount: 40
+  flipDuration: 0.1
+  returnDuration: 0.2
 --- !u!1 &1415613558
 GameObject:
   m_ObjectHideFlags: 0

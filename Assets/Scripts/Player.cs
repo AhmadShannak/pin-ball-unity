@@ -12,9 +12,6 @@ namespace Pinball {
       Left,
       Right
     }
-
-    Controller controller;
-    Transform activeFlipper => controller == Controller.Left ? leftFlipper : rightFlipper;
     private Camera camera;
     private Quaternion initialRotationLeft, initialRotationRight;
 
@@ -25,27 +22,42 @@ namespace Pinball {
     }
 
     private void Update() {
-      if (Input.GetMouseButtonDown(0) && camera != null) {
-        controller = (Input.mousePosition.x / (float)Screen.width) > 0.5f
-          ? Controller.Right
-          : Controller.Left;
-        Flip();
-        Debug.Log("Mouse Down");
+      bool leftFlipperActive = false;
+      bool rightFlipperActive = false;
+
+      foreach (var touch in Input.touches) {
+        if (camera != null) {
+          if (touch.position.x / (float)Screen.width < 0.5f) {
+            leftFlipperActive = true;
+          } else {
+            rightFlipperActive = true;
+          }
+        }  
       }
-      if (Input.GetMouseButtonUp(0)) {
-        Debug.Log("Mouse Up");
-        ReturnFlipper();
+
+      if (leftFlipperActive) {
+        Flip(Controller.Left);
+      } else {
+        ReturnFlipper(Controller.Left);
+      }
+      
+      if (rightFlipperActive) {
+        Flip(Controller.Right);
+      } else {
+        ReturnFlipper(Controller.Right);
       }
     }
     
-    void Flip() {
-      var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount; 
-      activeFlipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
+    void Flip(Controller controller) {
+      var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount;
+      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
+      flipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
     }
     
-    void ReturnFlipper() {
+    void ReturnFlipper(Controller controller) {
       var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
-      activeFlipper.DORotateQuaternion(rotation, returnDuration);
+      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
+      flipper.DORotateQuaternion(rotation, returnDuration);
     }
   }
 }
