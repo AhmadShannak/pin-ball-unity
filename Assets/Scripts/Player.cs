@@ -23,17 +23,20 @@ namespace Pinball {
     }
 
     private void Update() {
+   
       bool leftFlipperActive = false;
       bool rightFlipperActive = false;
-
-      foreach (var touch in Input.touches) {
-        if (camera != null) {
-          if (touch.position.x / (float)Screen.width < 0.5f) {
-            leftFlipperActive = true;
-          } else {
-            rightFlipperActive = true;
+      if (photonView.IsMine) {
+        foreach (var touch in Input.touches) {
+          if (camera != null) {
+            if (touch.position.x / (float)Screen.width < 0.5f) {
+              leftFlipperActive = true;
+            }
+            else {
+              rightFlipperActive = true;
+            }
           }
-        }  
+        }
       }
 
       if (leftFlipperActive) {
