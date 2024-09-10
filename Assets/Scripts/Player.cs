@@ -18,15 +18,16 @@ namespace Pinball {
 
     private void Awake() {
       camera = Camera.main;
-      initialRotationLeft = leftFlipper.rotation;
-      initialRotationRight = rightFlipper.rotation;
     }
 
     private void Update() {
-   
+      if (!photonView.IsMine) {
+        return;
+      }
+      
       bool leftFlipperActive = false;
       bool rightFlipperActive = false;
-      if (photonView.IsMine) {
+      
         foreach (var touch in Input.touches) {
           if (camera != null) {
             if (touch.position.x / (float)Screen.width < 0.5f) {
@@ -37,7 +38,6 @@ namespace Pinball {
             }
           }
         }
-      }
 
       if (leftFlipperActive) {
         Flip(Controller.Left);
@@ -51,32 +51,15 @@ namespace Pinball {
         ReturnFlipper(Controller.Right);
       }
     }
-    
     void Flip(Controller controller) {
-      if (photonView.IsMine) {
-        FlipP1(controller);
-      } else {
-        FlipP2(controller);
-
-      }
-    }
-    void FlipP1(Controller controller) {
       var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
-      flipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
-    }
-    
-    void FlipP2(Controller controller) {
-      var rotation = controller == Controller.Left ? -rotationAmount : rotationAmount;
-      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
-      flipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
+      flipper.DOLocalRotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
     }
     
     void ReturnFlipper(Controller controller) {
       var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
-      var playerRotation = this.transform.localEulerAngles;
-      rotation = Quaternion.Euler(playerRotation) * rotation;
       flipper.DORotateQuaternion(rotation, returnDuration);
     }
     
@@ -86,6 +69,8 @@ namespace Pinball {
       var instantiatePosition = isMine ? new Vector3(0, -3, 0) : new Vector3(0, 3, 0);
       player.transform.position = instantiatePosition;
       player.transform.localEulerAngles = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
+      initialRotationLeft = leftFlipper.rotation;
+      initialRotationRight = rightFlipper.rotation;
     }
   }
 }
