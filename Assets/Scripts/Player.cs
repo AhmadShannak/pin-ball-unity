@@ -50,7 +50,21 @@ namespace Pinball {
     }
     
     void Flip(Controller controller) {
+      if (photonView.IsMine) {
+        FlipP1(controller);
+      } else {
+        FlipP2(controller);
+
+      }
+    }
+    void FlipP1(Controller controller) {
       var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount;
+      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
+      flipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
+    }
+    
+    void FlipP2(Controller controller) {
+      var rotation = controller == Controller.Left ? -rotationAmount : rotationAmount;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
       flipper.DORotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
     }
