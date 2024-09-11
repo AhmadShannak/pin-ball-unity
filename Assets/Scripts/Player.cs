@@ -18,6 +18,8 @@ namespace Pinball {
 
     private void Awake() {
       camera = Camera.main;
+      initialRotationLeft = leftFlipper.localRotation;
+      initialRotationRight = rightFlipper.localRotation;
     }
 
     private void Update() {
@@ -27,36 +29,46 @@ namespace Pinball {
       
       bool leftFlipperActive = false;
       bool rightFlipperActive = false;
-      
-        foreach (var touch in Input.touches) {
-          if (camera != null) {
-            if (touch.position.x / (float)Screen.width < 0.5f) {
-              leftFlipperActive = true;
-            }
-            else {
-              rightFlipperActive = true;
-            }
+#if UNITY_EDITOR
+      if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+        leftFlipperActive = true;
+      }
+
+      if (Input.GetKeyDown(KeyCode.RightArrow)) {
+        rightFlipperActive = true;
+      }
+#endif
+      foreach (var touch in Input.touches) {
+        if (camera != null) {
+          if (touch.position.x / (float)Screen.width < 0.5f) {
+            leftFlipperActive = true;
+          } else {
+            rightFlipperActive = true;
           }
         }
+      }
 
       if (leftFlipperActive) {
-        Flip(Controller.Left);
+        photonView.RPC("Flip", RpcTarget.All, Controller.Left);
       } else {
-        ReturnFlipper(Controller.Left);
+        photonView.RPC("ReturnFlipper", RpcTarget.All, Controller.Left);
       }
       
       if (rightFlipperActive) {
-        Flip(Controller.Right);
+        photonView.RPC("Flip", RpcTarget.All, Controller.Right);
       } else {
-        ReturnFlipper(Controller.Right);
+        photonView.RPC("ReturnFlipper", RpcTarget.All, Controller.Right);
       }
     }
+    
+    [PunRPC]
     void Flip(Controller controller) {
       var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
       flipper.DOLocalRotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
     }
     
+    [PunRPC]
     void ReturnFlipper(Controller controller) {
       var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
       Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
@@ -67,10 +79,22 @@ namespace Pinball {
       var player = info.photonView.gameObject;
       bool isMine = player.GetPhotonView().IsMine;
       var instantiatePosition = isMine ? new Vector3(0, -3, 0) : new Vector3(0, 3, 0);
+      var instantiateRotation = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
       player.transform.position = instantiatePosition;
-      player.transform.localEulerAngles = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
+      player.transform.localEulerAngles = instantiateRotation;
       initialRotationLeft = leftFlipper.rotation;
       initialRotationRight = rightFlipper.rotation;
+      // photonView.RPC("InitializePositionAndRotation", RpcTarget.All, info.photonView.ViewID, instantiatePosition, instantiateRotation);
+    }
+    
+    [PunRPC]
+    void InitializePositionAndRotation(int photonViewID, Vector3 position, Vector3 rotation) {
+      PhotonView targetPhotonView = PhotonView.Find(photonViewID);
+      if (targetPhotonView == null) {
+        return;
+      }
+      targetPhotonView.gameObject.transform.position = position;
+      targetPhotonView.transform.localEulerAngles = rotation;
     }
   }
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1307561437240535403}
-  - component: {fileID: 413199840932348325}
+  - component: {fileID: 6919061041257139951}
   m_Layer: 0
   m_Name: Right
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 785056461626476407}
   m_Father: {fileID: 5788555045730985572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &413199840932348325
+--- !u!114 &6919061041257139951
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
     SynchronizeEnabled: 1
-    InterpolateOption: 0
+    InterpolateOption: 2
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
@@ -222,7 +222,7 @@ MonoBehaviour:
   observableSearch: 0
   ObservedComponents:
   - {fileID: 1110467916039286767}
-  - {fileID: 413199840932348325}
+  - {fileID: 6919061041257139951}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
     ExtrapolateNumberOfStoredPositions: 1
   m_RotationModel:
     SynchronizeEnabled: 1
-    InterpolateOption: 0
+    InterpolateOption: 2
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5
   m_ScaleModel:
