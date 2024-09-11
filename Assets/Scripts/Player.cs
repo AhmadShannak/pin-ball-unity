@@ -1,4 +1,3 @@
-using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 
@@ -7,7 +6,11 @@ namespace Pinball {
     [SerializeField]
     Transform leftFlipper, rightFlipper;
     [SerializeField]
-    float rotationAmount = 40, flipDuration = 0.1f, returnDuration = 0.2f;
+    Rigidbody2D leftFlipperRb, rightFlipperRb;
+    [SerializeField]
+    float rotationAmount = 40, flipTorque = 1000f, returnTorque = 500f;
+    
+    bool isMine;
     
     enum Controller {
       Left,
@@ -30,11 +33,11 @@ namespace Pinball {
       bool leftFlipperActive = false;
       bool rightFlipperActive = false;
 #if UNITY_EDITOR
-      if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+      if (Input.GetKey(KeyCode.LeftArrow)) {
         leftFlipperActive = true;
       }
 
-      if (Input.GetKeyDown(KeyCode.RightArrow)) {
+      if (Input.GetKey(KeyCode.RightArrow)) {
         rightFlipperActive = true;
       }
 #endif
@@ -63,28 +66,53 @@ namespace Pinball {
     
     [PunRPC]
     void Flip(Controller controller) {
-      var rotation = controller == Controller.Left ? rotationAmount : -rotationAmount;
-      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
-      flipper.DOLocalRotate(new Vector3(0, 0, rotation), flipDuration, RotateMode.Fast);
+      int notMine = isMine ? 1 : -1;
+      if (controller == Controller.Left) {
+        leftFlipperRb.AddTorque(notMine * flipTorque);
+      } else {
+        rightFlipperRb.AddTorque(notMine * -flipTorque);
+      }
     }
     
     [PunRPC]
     void ReturnFlipper(Controller controller) {
-      var rotation = controller == Controller.Left ? initialRotationLeft : initialRotationRight;
-      Transform flipper = controller == Controller.Left ? leftFlipper : rightFlipper;
-      flipper.DORotateQuaternion(rotation, returnDuration);
+      int notMine = isMine ? 1 : -1;
+      if (controller == Controller.Left) {
+        leftFlipperRb.AddTorque(notMine * -returnTorque);
+      } else {
+        rightFlipperRb.AddTorque(notMine * returnTorque);
+      }
     }
     
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
       var player = info.photonView.gameObject;
-      bool isMine = player.GetPhotonView().IsMine;
+      isMine = player.GetPhotonView().IsMine;
       var instantiatePosition = isMine ? new Vector3(0, -3, 0) : new Vector3(0, 3, 0);
       var instantiateRotation = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
       player.transform.position = instantiatePosition;
       player.transform.localEulerAngles = instantiateRotation;
       initialRotationLeft = leftFlipper.rotation;
       initialRotationRight = rightFlipper.rotation;
-      // photonView.RPC("InitializePositionAndRotation", RpcTarget.All, info.photonView.ViewID, instantiatePosition, instantiateRotation);
+      if (isMine) {
+        return;
+      }
+      Debug.Log("Not Mine");
+      var leftHingeJoint2D = player.GetComponent<Player>().leftFlipperRb.GetComponent<HingeJoint2D>();
+      var rightHingeJoint2D = player.GetComponent<Player>().rightFlipperRb.GetComponent<HingeJoint2D>();
+      
+      var limits = leftHingeJoint2D.limits;
+      limits = new JointAngleLimits2D {
+        min = -limits.min,
+        max = -limits.max
+      };
+      leftHingeJoint2D.limits = limits;
+      
+      limits = rightHingeJoint2D.limits;
+      limits = new JointAngleLimits2D {
+        min = -limits.min,
+        max = -limits.max
+      };
+      rightHingeJoint2D.limits = limits;
     }
     
     [PunRPC]
