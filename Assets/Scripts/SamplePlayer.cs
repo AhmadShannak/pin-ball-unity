@@ -35,15 +35,6 @@ namespace Pinball {
       if (Input.GetKey(KeyCode.RightArrow)) {
         rightFlipperActive = true;
       }
-      foreach (var touch in Input.touches) {
-        if (camera != null) {
-          if (touch.position.x / (float)Screen.width < 0.5f) {
-            leftFlipperActive = true;
-          } else {
-            rightFlipperActive = true;
-          }
-        }
-      }
       
       if (leftFlipperActive) {
         Flip(leftFlipperRb, flipTorque);
