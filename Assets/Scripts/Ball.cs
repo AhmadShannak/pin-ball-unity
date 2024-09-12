@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Pinball {
@@ -13,6 +14,7 @@ namespace Pinball {
 
     bool isCharging = false;
     float currentChargeTime = 0;
+    GameObject fireTower;
     
     void Update() {
       if (Input.GetKeyDown(KeyCode.Space)) {
@@ -31,6 +33,12 @@ namespace Pinball {
         
         ballRb.AddForce(Vector2.up * appliedForce, ForceMode2D.Impulse);
         isCharging = false;
+      }
+      
+      if (this.transform.position.y > 0) {
+        Physics2D.gravity = new Vector2(0, 9.8f);
+      } else {
+        Physics2D.gravity = new Vector2(0, -9.8f);
       }
     }
   }
