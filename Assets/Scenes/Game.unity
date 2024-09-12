@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPath: Player
+  ballPath: Ball
   roomIDText: {fileID: 265872325}
   player1Position: {x: 0, y: -3, z: 0}
   player2Position: {x: 0, y: 3, z: 0}

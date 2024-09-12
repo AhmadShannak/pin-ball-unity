@@ -7,6 +7,8 @@ namespace Pinball {
     [SerializeField]
     string playerPath;
     [SerializeField]
+    string ballPath;
+    [SerializeField]
     TextMeshProUGUI roomIDText;
     [SerializeField]
     Vector3 player1Position = new Vector3(0, -3, 0), player2Position = new Vector3(0, 3, 0);
@@ -18,6 +20,13 @@ namespace Pinball {
 
     void CreatePlayers() {
       GameObject player = PhotonNetwork.Instantiate(playerPath, Vector3.zero, Quaternion.identity);
+     
+
+      if (PhotonNetwork.IsMasterClient) // Only the master client should instantiate the ball
+      {
+           GameObject ball = PhotonNetwork.Instantiate(ballPath, new Vector3 (0.5f,0f,0f) , Quaternion.identity);
+      }
+      
       // player.GetPhotonView(). = new object[] { player.GetPhotonView().ViewID };
 
       // bool isMine = player.GetPhotonView().IsMine;
