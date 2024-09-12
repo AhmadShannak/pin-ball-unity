@@ -1,8 +1,9 @@
 using System;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Pinball {
-  public class Ball : MonoBehaviour {
+  public class Ball : MonoBehaviourPun, IPunOwnershipCallbacks {
     [SerializeField]
     float speed = 5f;
     [SerializeField]
@@ -38,8 +39,24 @@ namespace Pinball {
       if (this.transform.position.y > 0) {
         Physics2D.gravity = new Vector2(0, 9.8f);
       } else {
+      PhotonView photonView = this.gameObject.GetComponent<PhotonView>();
+      if (!photonView.IsMine) {
+        photonView.RequestOwnership();
+      }
         Physics2D.gravity = new Vector2(0, -9.8f);
       }
+    }
+
+    public void OnOwnershipRequest(PhotonView targetView, Photon.Realtime.Player requestingPlayer) {
+      Debug.Log("Ownership requested");
+    }
+
+    public void OnOwnershipTransfered(PhotonView targetView, Photon.Realtime.Player previousOwner) {
+      Debug.Log("Ownership transfered");
+    }
+
+    public void OnOwnershipTransferFailed(PhotonView targetView, Photon.Realtime.Player senderOfFailedRequest) {
+      Debug.Log("Ownership transfer failed");
     }
   }
 }
