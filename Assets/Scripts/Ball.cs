@@ -26,23 +26,32 @@ namespace Pinball {
     void Update() {
       if (Input.touchCount > 0 && photonView.IsMine) {
         Touch touch = Input.GetTouch(0);
+        Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
-        if (touch.phase == TouchPhase.Began) {
-          isCharging = true;
-          currentChargeTime = 0;    
-        }
+        // Check if the touch is on the ball
+        RaycastHit2D hit = Physics2D.Raycast(touchPosition, Vector2.zero);
 
-        if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved) {
-          currentChargeTime += Time.deltaTime;
-          currentChargeTime = Mathf.Clamp(currentChargeTime, 0, maxChargeTime);
-        }
+        if (hit.collider != null && hit.collider.gameObject == ballRb.gameObject) {
+          if (touch.phase == TouchPhase.Began)
+          {
+            isCharging = true;
+            currentChargeTime = 0;
+          }
 
-        if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) {
-          float chargePercentage = currentChargeTime / maxChargeTime;
-          float appliedForce = chargePercentage * maxForce;
-        
-          ballRb.AddForce(Vector2.up * appliedForce, ForceMode2D.Impulse);
-          isCharging = false;
+          if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
+          {
+            currentChargeTime += Time.deltaTime;
+            currentChargeTime = Mathf.Clamp(currentChargeTime, 0, maxChargeTime);
+          }
+
+          if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+          {
+            float chargePercentage = currentChargeTime / maxChargeTime;
+            float appliedForce = chargePercentage * maxForce;
+
+            ballRb.AddForce(Vector2.up * appliedForce, ForceMode2D.Impulse);
+            isCharging = false;
+          }
         }
       }
       
