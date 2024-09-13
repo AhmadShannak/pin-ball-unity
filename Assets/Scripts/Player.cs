@@ -33,7 +33,7 @@ namespace Pinball {
       
       bool leftFlipperActive = false;
       bool rightFlipperActive = false;
-#if UNITY_EDITOR
+
       if (Input.GetKey(KeyCode.LeftArrow)) {
         leftFlipperActive = true;
       }
@@ -41,7 +41,6 @@ namespace Pinball {
       if (Input.GetKey(KeyCode.RightArrow)) {
         rightFlipperActive = true;
       }
-#endif
       foreach (var touch in Input.touches) {
         if (camera != null) {
           if (touch.position.x / (float)Screen.width < 0.5f) {

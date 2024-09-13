@@ -24,17 +24,17 @@ namespace Pinball {
     }
 
     void Update() {
-      if (Input.GetKeyDown(KeyCode.Space)) {
+      if (Input.GetKeyDown(KeyCode.Space) && photonView.IsMine) {
         isCharging = true;
         currentChargeTime = 0;    
       }
 
-      if (Input.GetKey(KeyCode.Space)) {
+      if (Input.GetKey(KeyCode.Space) && photonView.IsMine) {
         currentChargeTime += Time.deltaTime;
         currentChargeTime = Mathf.Clamp(currentChargeTime, 0, maxChargeTime);
       }
 
-      if (Input.GetKeyUp(KeyCode.Space)) {
+      if (Input.GetKeyUp(KeyCode.Space) && photonView.IsMine) {
         float chargePercentage = currentChargeTime / maxChargeTime;
         float appliedForce = chargePercentage * maxForce;
         
@@ -43,7 +43,13 @@ namespace Pinball {
       }
       
       if (photonView.IsMine) {
-        photonView.RPC("SwapGravity", RpcTarget.All);
+        if (this.transform.position.y > 0) {
+          var otherPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => !p.IsMasterClient);
+          photonView.TransferOwnership(otherPlayer);
+          photonView.RPC("SwapGravity", RpcTarget.All, 9.82f);
+        } else {
+          photonView.RPC("SwapGravity", RpcTarget.All, -9.82f);
+        }
       }
     }
 
@@ -60,13 +66,9 @@ namespace Pinball {
     }
     
     [PunRPC]
-    private void SwapGravity() {
+    private void SwapGravity(float gravity) {
+      Physics2D.gravity = new Vector2(0, gravity);
       Debug.Log("Swap gravity");
-      if (this.transform.position.y > 0) {
-        Physics2D.gravity = new Vector2(0, 9.8f);
-      } else {
-        Physics2D.gravity = new Vector2(0, -9.8f);
-      }
     }
   }
 }
