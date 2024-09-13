@@ -4,10 +4,11 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Pinball {
 
-  public class GameManager : MonoBehaviour {
+  public class GameManager : MonoBehaviourPunCallbacks {
     [SerializeField]
     string playerPath;
     [SerializeField]
@@ -38,6 +39,17 @@ namespace Pinball {
     private void Update() {
       masterScore.text = "Score: " + PhotonNetwork.MasterClient?.GetScore();
       clientScore.text = "Score: " + PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber != PhotonNetwork.MasterClient.ActorNumber)?.GetScore();
+    }
+    
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player player) {
+      Debug.Log("Left room");
+      // Check if we are still in the room
+      if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom) {
+        // Load the Launcher scene
+        SceneManager.LoadScene("Luncher");
+        // Leave the room
+        PhotonNetwork.LeaveRoom();
+      }
     }
   }
 }
