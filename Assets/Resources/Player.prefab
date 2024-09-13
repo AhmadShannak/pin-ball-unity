@@ -378,7 +378,7 @@ MonoBehaviour:
   rightFlipperRb: {fileID: 8123678702654239515}
   rotationAmount: 55
   flipTorque: 1000
-  returnTorque: 500
+  returnTorque: 100
 --- !u!114 &5884439558299010915
 MonoBehaviour:
   m_ObjectHideFlags: 0

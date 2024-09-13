@@ -16,7 +16,12 @@ namespace Pinball {
     bool isCharging = false;
     float currentChargeTime = 0;
     GameObject fireTower;
+    private PhotonView photonView;
     
+    private void Start() {
+       photonView = this.gameObject.GetComponent<PhotonView>();
+    }
+
     void Update() {
       if (Input.GetKeyDown(KeyCode.Space)) {
         isCharging = true;
@@ -36,14 +41,8 @@ namespace Pinball {
         isCharging = false;
       }
       
-      if (this.transform.position.y > 0) {
-        Physics2D.gravity = new Vector2(0, 9.8f);
-      } else {
-      PhotonView photonView = this.gameObject.GetComponent<PhotonView>();
-      if (!photonView.IsMine) {
-        photonView.RequestOwnership();
-      }
-        Physics2D.gravity = new Vector2(0, -9.8f);
+      if (photonView.IsMine) {
+        photonView.RPC("SwapGravity", RpcTarget.All);
       }
     }
 
@@ -57,6 +56,14 @@ namespace Pinball {
 
     public void OnOwnershipTransferFailed(PhotonView targetView, Photon.Realtime.Player senderOfFailedRequest) {
       Debug.Log("Ownership transfer failed");
+    }
+    
+    public void SwapGravity() {
+      if (this.transform.position.y > 0) {
+        Physics2D.gravity = new Vector2(0, -9.8f);
+      } else {
+        Physics2D.gravity = new Vector2(0, 9.8f);
+      }
     }
   }
 }
