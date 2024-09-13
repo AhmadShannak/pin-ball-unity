@@ -44,11 +44,19 @@ namespace Pinball {
       
       if (photonView.IsMine) {
         if (this.transform.position.y > 0) {
-          var otherPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => !p.IsMasterClient);
-          photonView.TransferOwnership(otherPlayer);
-          photonView.RPC("SwapGravity", RpcTarget.All, 9.82f);
+          var nonMasterPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => !p.IsMasterClient);
+          if (Physics2D.gravity.y < 0) {
+            photonView.RPC("SwapGravity", RpcTarget.All, 9.82f);
+            photonView.TransferOwnership(nonMasterPlayer);
+          }
+          // photonView.RPC("SyncState", otherPlayer, this.transform.position, this.transform.rotation, Physics2D.gravity);
         } else {
-          photonView.RPC("SwapGravity", RpcTarget.All, -9.82f);
+          var masterPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => p.IsMasterClient);
+          if (Physics2D.gravity.y > 0) {
+            photonView.RPC("SwapGravity", RpcTarget.All, -9.82f);
+            photonView.TransferOwnership(masterPlayer);
+          }
+          // photonView.RPC("SyncState", otherPlayer, this.transform.position, this.transform.rotation, Physics2D.gravity);
         }
       }
     }
@@ -69,6 +77,14 @@ namespace Pinball {
     private void SwapGravity(float gravity) {
       Physics2D.gravity = new Vector2(0, gravity);
       Debug.Log("Swap gravity");
+    }
+    
+    [PunRPC]
+    private void SyncState(Vector3 position, Vector3 rotation, Vector2 gravity) {
+      // transform.position = position;
+      // transform.localEulerAngles = rotation;
+      Physics2D.gravity = gravity;
+      Debug.Log("sTATE SYNCED");
     }
   }
 }
