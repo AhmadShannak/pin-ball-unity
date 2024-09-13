@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
@@ -12,10 +13,10 @@ namespace Pinball {
     [SerializeField]
     string ballPath;
     [SerializeField]
-    TextMeshProUGUI roomIDText;
+    TextMeshProUGUI roomIDText, masterScore, clientScore;
     [SerializeField]
     Vector3 player1Position = new Vector3(0, -3, 0), player2Position = new Vector3(0, 3, 0);
-
+    
     public static int roundStarter = -1;
     private static GameObject ball = null;
     
@@ -29,21 +30,14 @@ namespace Pinball {
      
 
       if (PhotonNetwork.IsMasterClient) { // Only the master client should instantiate the ball
-        GameManager.roundStarter = PhotonNetwork.MasterClient.ActorNumber; 
+        Debug.Log(roundStarter);
         ball = PhotonNetwork.Instantiate(ballPath, new Vector3 (2.11f,-4.27f,0f) , Quaternion.identity);
       }
     }
 
-    public static void ResetRound(int winnerID) {
-      var winner = PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber == winnerID);
-      var winnerScore = winner.GetScore();
-      winnerScore++;
-      winner.SetScore(winnerScore);
-      roundStarter = PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber != roundStarter)!.ActorNumber;
-
-      ball.transform.position = roundStarter == PhotonNetwork.MasterClient.ActorNumber
-        ? new Vector3(2.11f, -4.27f, 0f)
-        : new Vector3(-2.11f, 4.27f, 0f);
+    private void Update() {
+      masterScore.text = "Score: " + PhotonNetwork.MasterClient?.GetScore();
+      clientScore.text = "Score: " + PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber != PhotonNetwork.MasterClient.ActorNumber)?.GetScore();
     }
   }
 }

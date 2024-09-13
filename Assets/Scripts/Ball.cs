@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 
 namespace Pinball {
@@ -18,9 +19,11 @@ namespace Pinball {
     float currentChargeTime = 0;
     GameObject fireTower;
     private PhotonView photonView;
+    private BallFire _ballFire;
     
     private void Start() {
        photonView = this.gameObject.GetComponent<PhotonView>();
+       GameManager.roundStarter = PhotonNetwork.MasterClient.ActorNumber;
     }
 
     void Update() {
@@ -92,6 +95,23 @@ namespace Pinball {
       }
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+      if (other.gameObject.GetComponent<BallFire>() != null) {
+        _ballFire = other.gameObject.GetComponent<BallFire>();
+      }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+      if (photonView != null && !photonView.IsMine) {
+        return;
+      }
+      if (other.gameObject.name == "Bottom") {
+        photonView.RPC("ResetRound", RpcTarget.All, PhotonNetwork.PlayerList[1].ActorNumber);
+      } else if (other.gameObject.name == "Top") {
+        photonView.RPC("ResetRound", RpcTarget.All, PhotonNetwork.MasterClient.ActorNumber);
+      }
+    }
+
     public void OnOwnershipRequest(PhotonView targetView, Photon.Realtime.Player requestingPlayer) {
       Debug.Log("Ownership requested");
     }
@@ -116,6 +136,23 @@ namespace Pinball {
       // transform.localEulerAngles = rotation;
       Physics2D.gravity = gravity;
       Debug.Log("sTATE SYNCED");
+    }
+    
+    [PunRPC]
+    public void ResetRound(int winnerID) {
+      _ballFire.Reset();
+      var winner = PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber == winnerID);
+      var winnerScore = winner.GetScore();
+      winnerScore++;
+      winner.SetScore(winnerScore);
+      GameManager.roundStarter = PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber != GameManager.roundStarter).ActorNumber;
+      photonView.TransferOwnership(PhotonNetwork.PlayerList.FirstOrDefault(p => p.ActorNumber == GameManager.roundStarter));
+      ballRb.velocity = Vector2.zero;
+      this.transform.position = GameManager.roundStarter == PhotonNetwork.MasterClient.ActorNumber
+        ? new Vector3(2.11f, -4.27f, 0f)
+        : new Vector3(-2.11f, 4.27f, 0f);
+      ballRb.velocity = Vector2.zero;
+      Debug.Log("ResetRound" + GameManager.roundStarter);
     }
   }
 }
