@@ -1952,7 +1952,6 @@ MonoBehaviour:
   physicMaterial2D: {fileID: 6200000, guid: 92d4890ec342bf740b83ebe3cc9c7836, type: 2}
   boxes:
   - {fileID: 2265195022878969104}
-  - {fileID: 5750008212280566493}
 --- !u!61 &2265195022878969104
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3898,7 +3897,6 @@ MonoBehaviour:
   physicMaterial2D: {fileID: 6200000, guid: 92d4890ec342bf740b83ebe3cc9c7836, type: 2}
   boxes:
   - {fileID: 5027514024072216257}
-  - {fileID: 5370813550481405411}
 --- !u!61 &5027514024072216257
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
@@ -87,7 +88,7 @@ namespace Pinball {
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
       var player = info.photonView.gameObject;
       isMine = player.GetPhotonView().IsMine;
-      var instantiatePosition = isMine ? new Vector3(0, -4, 0) : new Vector3(0, 4, 0);
+      var instantiatePosition = isMine ? new Vector3(0, -4.05f, 0) : new Vector3(0, 4.05f, 0);
       var instantiateRotation = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
       player.transform.position = instantiatePosition;
       player.transform.localEulerAngles = instantiateRotation;

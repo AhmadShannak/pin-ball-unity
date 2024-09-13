@@ -15,7 +15,7 @@ public class BallFire : MonoBehaviour {
   }
 
   IEnumerator<float> TriggerExit() {
-    Timing.WaitForSeconds(2);
+    yield return Timing.WaitForSeconds(2);
     foreach (var box in boxes) {
       Debug.Log("saber");
       box.sharedMaterial = physicMaterial2D;

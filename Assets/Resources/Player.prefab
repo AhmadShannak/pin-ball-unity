@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6919061041257139951}
   - component: {fileID: 8123678702654239515}
   - component: {fileID: 3490811140548499773}
-  - component: {fileID: 6631498876837688624}
   m_Layer: 0
   m_Name: Right
   m_TagString: Untagged
@@ -82,11 +81,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ab4093246c96443abb5af0f86acd8d88, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -122,58 +121,6 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 55
---- !u!60 &6631498876837688624
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 433767394072325130}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.025423646, y: 0.11017251}
-      - {x: -0.5887696, y: -0.26937076}
-      - {x: -0.57953763, y: -0.32185864}
-      - {x: -0.55600566, y: -0.37045896}
-      - {x: -0.46093988, y: -0.3323238}
-      - {x: 0.0093486905, y: -0.09020352}
-      - {x: 0.13317817, y: -0.017930806}
-  m_UseDelaunayMesh: 0
 --- !u!1 &860609852206215400
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +162,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 860609852206215400}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ab4093246c96443abb5af0f86acd8d88, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -415,7 +362,6 @@ GameObject:
   - component: {fileID: 1110467916039286767}
   - component: {fileID: 3839587468416526712}
   - component: {fileID: 4098220129275334593}
-  - component: {fileID: 724350723200208955}
   m_Layer: 0
   m_Name: Left
   m_TagString: Untagged
@@ -485,11 +431,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ab4093246c96443abb5af0f86acd8d88, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -525,56 +471,6 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: -55
---- !u!60 &724350723200208955
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6411413367113335553}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.049587846, y: 0.10636997}
-      - {x: -0.12352371, y: -0.030389756}
-      - {x: 0.24483913, y: -0.23698533}
-      - {x: 0.56871766, y: -0.36410308}
-      - {x: 0.6078373, y: -0.28843862}
-  m_UseDelaunayMesh: 0
 --- !u!1 &6727078143130915340
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,7 +596,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 8604144298663841717}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ab4093246c96443abb5af0f86acd8d88, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

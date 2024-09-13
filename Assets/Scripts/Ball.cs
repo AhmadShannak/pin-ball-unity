@@ -58,11 +58,13 @@ namespace Pinball {
       Debug.Log("Ownership transfer failed");
     }
     
-    public void SwapGravity() {
+    [PunRPC]
+    private void SwapGravity() {
+      Debug.Log("Swap gravity");
       if (this.transform.position.y > 0) {
-        Physics2D.gravity = new Vector2(0, -9.8f);
-      } else {
         Physics2D.gravity = new Vector2(0, 9.8f);
+      } else {
+        Physics2D.gravity = new Vector2(0, -9.8f);
       }
     }
   }
