@@ -79,16 +79,16 @@ namespace Pinball {
       if (photonView.IsMine) {
         if (this.transform.position.y > 0) {
           var nonMasterPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => !p.IsMasterClient);
-          if (Physics2D.gravity.y < 0) {
-            photonView.RPC("SwapGravity", RpcTarget.All, 9.82f);
-            photonView.TransferOwnership(nonMasterPlayer);
+          if (ballRb.gravityScale > 0) {
+            photonView.RPC("SwapGravity", RpcTarget.All, -1);
+            // photonView.TransferOwnership(nonMasterPlayer);
           }
           // photonView.RPC("SyncState", otherPlayer, this.transform.position, this.transform.rotation, Physics2D.gravity);
         } else {
           var masterPlayer = PhotonNetwork.PlayerList.FirstOrDefault(p => p.IsMasterClient);
-          if (Physics2D.gravity.y > 0) {
-            photonView.RPC("SwapGravity", RpcTarget.All, -9.82f);
-            photonView.TransferOwnership(masterPlayer);
+          if (ballRb.gravityScale < 0) {
+            photonView.RPC("SwapGravity", RpcTarget.All, 1);
+            // photonView.TransferOwnership(masterPlayer);
           }
           // photonView.RPC("SyncState", otherPlayer, this.transform.position, this.transform.rotation, Physics2D.gravity);
         }
@@ -125,8 +125,8 @@ namespace Pinball {
     }
     
     [PunRPC]
-    private void SwapGravity(float gravity) {
-      Physics2D.gravity = new Vector2(0, gravity);
+    private void SwapGravity(int gravity) {
+      ballRb.gravityScale = gravity;
       Debug.Log("Swap gravity");
     }
     
