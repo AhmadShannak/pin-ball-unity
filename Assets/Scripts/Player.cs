@@ -87,7 +87,7 @@ namespace Pinball {
     
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
       var player = info.photonView.gameObject;
-      isMine = player.GetPhotonView().IsMine;
+      isMine = info.Sender.IsMasterClient;
       var instantiatePosition = isMine ? new Vector3(0, -4.05f, 0) : new Vector3(0, 4.05f, 0);
       var instantiateRotation = isMine ? Vector3.zero : new Vector3(-180, 0, 0);
       player.transform.position = instantiatePosition;
